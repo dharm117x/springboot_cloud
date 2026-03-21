@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.awspring.cloud.sns.core.SnsTemplate;
 import io.awspring.cloud.sqs.support.converter.SqsMessagingMessageConverter;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
@@ -19,6 +20,7 @@ import software.amazon.awssdk.http.nio.netty.ProxyConfiguration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.sns.SnsAsyncClient;
+import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.SqsClient;
 
@@ -43,6 +45,7 @@ public class AwsConfigLocal {
 
     @Value("${aws.s3.endpoint}")
 	private String endpoint;
+    
 
     //@Bean
 	public SqsMessagingMessageConverter sqsMessagingMessageConverter(ObjectMapper objectMapper) {
@@ -73,6 +76,14 @@ public class AwsConfigLocal {
     }
 
     @Bean
+    public SnsClient snsClient(AwsCredentialsProvider credentialsProvider) {
+        return SnsClient.builder()
+        		.credentialsProvider(credentialsProvider)
+        		.region(Region.of(region))
+        		.build();
+    }
+
+    @Bean
     public SnsAsyncClient snsAsyncClient(AwsCredentialsProvider credentialsProvider) {
         return SnsAsyncClient.builder()
         		.credentialsProvider(credentialsProvider)
@@ -94,6 +105,12 @@ public class AwsConfigLocal {
 	                    .build()))
                 .build();
     }
+
+    @Bean
+    public SnsTemplate snsTemplate(SnsClient client) {
+		return new SnsTemplate(client);
+	}
+
     
     @Bean
     public S3Client s3Client(AwsCredentialsProvider credentialsProvider) {
