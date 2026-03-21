@@ -1,17 +1,23 @@
 
 package com.example;
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import io.awspring.cloud.sqs.support.converter.SqsMessagingMessageConverter;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.http.nio.netty.ProxyConfiguration;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.sns.SnsAsyncClient;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
 import software.amazon.awssdk.services.sqs.SqsClient;
@@ -35,6 +41,16 @@ public class AwsConfigLocal {
     @Value("${proxy.port}")
     private int proxyPort;
 
+    @Value("${aws.s3.endpoint}")
+	private String endpoint;
+
+    //@Bean
+	public SqsMessagingMessageConverter sqsMessagingMessageConverter(ObjectMapper objectMapper) {
+		SqsMessagingMessageConverter converter = new SqsMessagingMessageConverter();
+		converter.setObjectMapper(objectMapper);
+		return converter;
+	}
+	
     @Bean
     public AwsCredentialsProvider customAwsCredentials() {
         return StaticCredentialsProvider.create(AwsBasicCredentials.create(accesskey, secretkey));
@@ -78,6 +94,16 @@ public class AwsConfigLocal {
 	                    .build()))
                 .build();
     }
+    
+    @Bean
+    public S3Client s3Client(AwsCredentialsProvider credentialsProvider) {
+        return S3Client.builder()
+                .region(Region.of(region))
+                .credentialsProvider(credentialsProvider)
+                .endpointOverride(URI.create(endpoint))
+                .build();
+    }
 
+    
 }
 

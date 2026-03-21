@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.model.UserDo;
+import com.example.model.UserTo;
 
 import io.awspring.cloud.sqs.operations.SendResult;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
@@ -23,9 +23,9 @@ public class SqsProducerService {
 	}
 	
 	@PostMapping("/producer")
-	public ResponseEntity<UserDo> producer(@RequestBody UserDo userDo) {
-		SendResult<UserDo> result = sqsTemplate.send("my-queue", userDo);
-		Message<UserDo> message = result.message();
+	public ResponseEntity<UserTo> producer(@RequestBody UserTo userDo) {
+		SendResult<UserTo> result = sqsTemplate.send("my-queue", userDo);
+		Message<UserTo> message = result.message();
 		message.getHeaders().forEach((key, value) -> {
 			System.out.println("Header Key: " + key + ", Value: " + value);
 		});

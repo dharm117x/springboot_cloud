@@ -2,7 +2,7 @@ package com.example.model;
 
 import java.io.Serializable;
 
-public class UserDo implements Serializable {
+public class UserTo implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,19 @@ public class UserDo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "UserDo [id=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("UserTo [id=");
+		builder.append(id);
+		builder.append(", name=");
+		builder.append(name);
+		builder.append(", email=");
+		builder.append(email);
+		builder.append(", phone=");
+		builder.append(phone);
+		builder.append("]");
+		return builder.toString();
 	}
 	
+	
+
 }

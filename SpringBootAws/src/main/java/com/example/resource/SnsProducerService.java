@@ -5,10 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.model.UserDo;
+import com.example.model.UserTo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import software.amazon.awssdk.services.sns.SnsClient;
@@ -41,9 +40,9 @@ public class SnsProducerService {
 	
 	
     @PostMapping("/producer")
-    public ResponseEntity<UserDo> publishAsyncMessage(@RequestBody UserDo userDo) throws JsonProcessingException {
-        snsPublisherService.sendMessage(topicArn, userDo);
-        return ResponseEntity.ok(userDo);
+    public ResponseEntity<UserTo> publishAsyncMessage(@RequestBody UserTo userTo) throws JsonProcessingException {
+        snsPublisherService.sendMessage(topicArn, userTo);
+        return ResponseEntity.ok(userTo);
     }
 
 }

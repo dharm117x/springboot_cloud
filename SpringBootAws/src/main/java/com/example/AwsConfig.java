@@ -12,7 +12,7 @@ import software.amazon.awssdk.regions.providers.AwsRegionProvider;
 @Configuration
 @Profile("!local")
 public class AwsConfig {
-
+	
 	@Bean
 	public AwsCredentialsProvider customAwsCredentialsProvider() {
 		return DefaultCredentialsProvider.builder().build();

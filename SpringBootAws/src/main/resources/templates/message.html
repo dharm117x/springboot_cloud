@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <h2>AWS Message Producer</h2>
+    <div th:if="${status}" th:text="${status}" style="color: blue;"></div>
+    
+ <span>
+User:  { "id":101, "name":"Dharmendra", "email": "dk@gmail.com", "phone":"1234512345" }
+<br/>
+Order: { "id":101, "userId":"Dharmendra", "product": "Moto phone", "quantity":1, "total":100.00 }  
+ 
+</span>   
+
+<form th:action="@{/message/produce}" th:object="${model}" method="post">
+    <label>Paste JSON Data:</label><br/>
+    <!-- th:field matches the property name in MessageForm -->
+    <textarea th:field="*{content}" required rows="10" cols="50" 
+              placeholder='{"name":"John", "email":"jd@test.com"}'></textarea>
+    <br/><br/>
+    
+    <label>Data Type:</label>
+    <select th:field="*{dataType}">
+        <option value="USER">User</option>
+        <option value="ORDER">Order</option>
+    </select>
+    <br/><br/>
+
+    <label>Destination:</label>
+    <select th:field="*{destinationType}">
+        <option value="SQS">SQS Queue</option>
+        <option value="SNS">SNS Topic</option>
+    </select>
+    <br/><br/>
+
+    <button type="submit">Send Message</button>
+</form>
+
+</body>
+</html>
