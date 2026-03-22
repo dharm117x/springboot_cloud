@@ -1,7 +1,5 @@
 package com.example.controller;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +26,7 @@ public class S3FileController {
 
 	@Autowired
 	private S3Client s3Client;
+	
 	@Value("${aws.s3.bucket}")
 	private String bucketName;
 
@@ -37,7 +36,7 @@ public class S3FileController {
 	}
 
 	@PostMapping("/upload")
-	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes ra) throws IOException {
+	public String uploadFile(@RequestParam("file") MultipartFile file, RedirectAttributes ra){
 		try {
 			PutObjectRequest putRequest = PutObjectRequest.builder()
 					.bucket(bucketName).key(file.getOriginalFilename())
@@ -53,11 +52,19 @@ public class S3FileController {
 	}
 
 	@GetMapping("/download")
-	public ResponseEntity<byte[]> downloadFile(@RequestParam("fileName") String fileName) {
+	public ResponseEntity<byte[]> downloadFile(@RequestParam("fileName") String fileName, RedirectAttributes ra) {
+		try {
 		GetObjectRequest getRequest = GetObjectRequest.builder().bucket(bucketName).key(fileName).build();
 
 		ResponseBytes<GetObjectResponse> s3Object = s3Client.getObjectAsBytes(getRequest);
+		ra.addFlashAttribute("message", "File Downloded successfully!");
+
 		return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
 				.body(s3Object.asByteArray());
+		}catch (Exception e) {
+			ra.addFlashAttribute("message", "File Download Failed!" + e.getMessage());
+		}
+		
+		return null;
 	}
 }
