@@ -1,0 +1,22 @@
+spring:
+  cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
+    config:
+      enabled: false  # Disables Config Client logic
+  config:
+    import: ""        # CRITICAL: Prevents app from searching for a Config Server on startup
+
+eureka:
+  client:
+    enabled: false    # Disables Eureka registration/discovery
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      # If using @FeignClient(name = "inventory-service"), the ID is often the service name
+      inventory-service: 
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s

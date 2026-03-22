@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Service Tester</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto space-y-8">
+        
+        <!-- Section: Create Order -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h2 class="text-xl font-bold mb-4 border-b pb-2">1. Place New Order</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <input id="email" type="email" placeholder="Customer Email" class="border p-2 rounded">
+                <input id="sku" type="text" placeholder="SKU (e.g. IPHONE-15)" class="border p-2 rounded">
+                <input id="price" type="number" placeholder="Price" class="border p-2 rounded">
+                <input id="qty" type="number" placeholder="Quantity" class="border p-2 rounded">
+            </div>
+            <button onclick="placeOrder()" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">Submit Order</button>
+        </div>
+
+        <!-- Section: Get All Orders -->
+        <div class="bg-white p-6 rounded-lg shadow">
+            <div class="flex justify-between items-center mb-4 border-b pb-2">
+                <h2 class="text-xl font-bold">2. Order History</h2>
+                <button onclick="getOrders()" class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700">Refresh List</button>
+            </div>
+            <div id="orderList" class="space-y-2">
+                <p class="text-gray-500 italic">No orders loaded yet.</p>
+            </div>
+        </div>
+
+        <!-- Log Output -->
+        <div class="bg-black text-green-400 p-4 rounded font-mono text-sm h-32 overflow-y-auto" id="log">
+            > Ready to test...
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:9001/api/orders';
+
+        function log(msg) {
+            const div = document.getElementById('log');
+            div.innerHTML += `<br>> ${msg}`;
+            div.scrollTop = div.scrollHeight;
+        }
+
+        async function placeOrder() {
+            const payload = {
+                customerEmail: document.getElementById('email').value,
+                items: [{
+                    skuCode: document.getElementById('sku').value,
+                    price: parseFloat(document.getElementById('price').value),
+                    quantity: parseInt(document.getElementById('qty').value)
+                }]
+            };
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                log(`POST Response: ${data.status} - ${data.message}`);
+                getOrders(); // Refresh list automatically
+            } catch (err) {
+                log(`Error: ${err.message}`);
+            }
+        }
+
+        async function getOrders() {
+            try {
+                const res = await fetch(API_URL);
+                const orders = await res.json();
+                const list = document.getElementById('orderList');
+                
+                list.innerHTML = orders.map(o => `
+                    <div class="p-3 border-l-4 border-blue-500 bg-gray-50 flex justify-between">
+                        <div>
+                            <span class="font-bold">${o.orderNumber}</span> 
+                            <span class="text-xs text-gray-500 ml-2">(${o.status})</span>
+                        </div>
+                        <div class="text-sm text-gray-600">${o.items.length} items</div>
+                    </div>
+                `).join('') || '<p>No orders found.</p>';
+                
+                log(`GET: Loaded ${orders.length} orders`);
+            } catch (err) {
+                log(`Error: ${err.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
