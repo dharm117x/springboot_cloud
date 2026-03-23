@@ -5,8 +5,6 @@ import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
 
 import com.example.model.MessageModel;
@@ -59,11 +57,6 @@ public class SnsSqsService {
 		}
 	}
 	
-	public void sendSnsMessageByTemplaate(String jsonMessage, String type) {
-		Message<String> message = MessageBuilder.withPayload(jsonMessage).setHeader("eventType", type).build();
-		snsTemplate.send(message);
-	}
-
 	public void sendSnsMessageByTemplaate1(String jsonMessage, String type) {
 		SnsNotification<String> notification = SnsNotification.builder(jsonMessage).header("eventType", type).build();
 		snsTemplate.sendNotification("my-topic", notification);

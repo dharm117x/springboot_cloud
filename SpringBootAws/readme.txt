@@ -1,5 +1,21 @@
-SNS-SQS:
---------
+SQS_SNS: By terraform:
+------------------------
+Terraform automatically "picks up" every .tf file 
+or specific:
+terraform plan -out=tfplan sns-sqs-setup.tf
+terraform apply tfplan
+
+
+terraform init: Initializes the directory by downloading the necessary AWS provider plugins.
+terraform plan: Previews exactly what Terraform will create, change, or delete without actually making changes yet.
+terraform apply: Executes the changes. You will be prompted to type yes to confirm the action
+
+terraform destroy: Destroy all.
+
+
+
+SNS-SQS: By Simple comand
+----------------------------
 Step 1: Create an SQS Queue:
 aws sqs
 
