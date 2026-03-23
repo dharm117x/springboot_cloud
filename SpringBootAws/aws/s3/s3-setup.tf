@@ -18,7 +18,7 @@ resource "aws_s3_bucket_policy" "allow_access" {
   bucket = aws_s3_bucket.my_bucket.id
 
   # templatefile reads the JSON and swaps ${bucket_arn} for the real ARN
-  policy = templatefile("${path.module}/s3_t_policy.json", {
+  policy = templatefile("${path.module}/s3_policy.json", {
     bucket_arn = aws_s3_bucket.my_bucket.arn
   })
 }

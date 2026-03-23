@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    aws:
+      sqs:
+        listener:
+          max-number-of-messages: 10
+          concurrency: 5

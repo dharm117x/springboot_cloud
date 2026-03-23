@@ -5,15 +5,70 @@ provider "aws" {
 # 1. Create the SNS Topic
 resource "aws_sns_topic" "my_topic" {
   name = "my-topic"
+  tags = {
+    Environment = "dev"
+  }
 }
 
 # 2. Create the SQS Queues
 resource "aws_sqs_queue" "my_user" {
   name = "my-user-queue"
+  tags = {
+    Environment = "dev"
+  }
 }
 
+#  2.1 Create DLQ for order
+resource "aws_sqs_queue" "my_order_dlq" {
+  name = "my-order-queue-dlq"
+  message_retention_seconds = 1209600 # 14 days (max)
+  tags = {
+    Environment = "dev"
+  }
+}
+
+# 2.2 Attached DLQ to main Queue
 resource "aws_sqs_queue" "my_order" {
   name = "my-order-queue"
+
+  visibility_timeout_seconds = 30
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.my_order_dlq.arn
+    maxReceiveCount     = 3
+  })
+
+  tags = {
+    Environment = "dev"
+  }
+}
+
+#2.3 Add re-drive policy
+resource "aws_sqs_queue_redrive_allow_policy" "dlq_policy" {
+  queue_url = aws_sqs_queue.my_order_dlq.id
+
+  redrive_allow_policy = jsonencode({
+    redrivePermission = "byQueue",
+    sourceQueueArns   = [aws_sqs_queue.my_order.arn]
+  })
+}
+
+#2.4 Cloud Watch
+resource "aws_cloudwatch_metric_alarm" "dlq_alarm" {
+  alarm_name          = "dlq-message-alarm"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "ApproximateNumberOfMessagesVisible"
+  namespace           = "AWS/SQS"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 1
+
+  dimensions = {
+    QueueName = aws_sqs_queue.my_order_dlq.name
+  }
+
+  alarm_description = "Alert when DLQ has messages"
 }
 
 # 3. Subscriptions with Filter Policies
