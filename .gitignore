@@ -6,6 +6,23 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
+# Local terraform directory (contains binaries and plugins)
+.terraform/
+
+# Terraform lock file
+.terraform.lock.hcl
+
+# State files (contains sensitive info and infrastructure status)
+*.tfstate
+*.tfstate.backup
+
+# Variables files (might contain secrets)
+*.tfvars
+*.tfvars.json
+
+# Crash logs
+crash.log
+
 
 # IntelliJ IDEA / Eclipse / VS Code project files
 *.iml
@@ -17,6 +34,7 @@ release.properties
 .settings/
 .vscode/
 .metadata/
+
 
 # Prevent nested git repos
 frontend/.git/

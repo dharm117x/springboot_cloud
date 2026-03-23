@@ -71,10 +71,20 @@ aws sns delete-topic --topic-arn arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic
 aws sqs delete-queue --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-order-queue
 aws sqs delete-queue --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-user-queue
 
-S3:  dk.static.site 
+S3:  dk.static.site - us-east-1
 ----------------------
 aws s3 ls
-aws s3api get-bucket-location --bucket dk.static.site
+
+aws s3 mb s3://s3-java-pgm
+
+aws s3api get-bucket-location --bucket s3-java-pgm
+
+aws s3api create-bucket --bucket your-unique-bucket-name --region us-west-2 --create-bucket-configuration LocationConstraint=us-west-2
+
+aws s3api put-bucket-policy --bucket s3-java-pgm --policy file://s3_policy.json
+
+
+aws s3 rb s3://s3-java-pgm --force
 
 
 

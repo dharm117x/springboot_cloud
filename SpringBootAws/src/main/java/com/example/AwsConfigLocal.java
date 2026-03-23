@@ -1,8 +1,6 @@
 
 package com.example;
 
-import java.net.URI;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +16,9 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.http.nio.netty.ProxyConfiguration;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.sns.SnsAsyncClient;
 import software.amazon.awssdk.services.sns.SnsClient;
 import software.amazon.awssdk.services.sqs.SqsAsyncClient;
@@ -117,10 +117,24 @@ public class AwsConfigLocal {
         return S3Client.builder()
                 .region(Region.of(region))
                 .credentialsProvider(credentialsProvider)
-                .endpointOverride(URI.create(endpoint))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true) // This fixes the SSL error
+                        .build())
+                .build();
+    }
+    
+    @Bean
+    public S3AsyncClient s3AsyncClient(AwsCredentialsProvider credentialsProvider) {
+        return S3AsyncClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(credentialsProvider)
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true) // This fixes the SSL error
+                        .build())
                 .build();
     }
 
+    
     
 }
 
