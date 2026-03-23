@@ -23,11 +23,14 @@ public class S3FileController {
 
     @Autowired
     private S3Service s3Service;
-    
-    // Automatically populates the dropdown in the UI on every request
+
     @ModelAttribute("buckets")
     public List<String> getBuckets() {
-        return s3Service.getBuckets();
+        try {
+            return s3Service.getBuckets();
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
     @GetMapping
@@ -35,13 +38,11 @@ public class S3FileController {
         return "s3bucket";
     }
 
-    // Updated to accept a specific bucketName
     @GetMapping("/files")
     public String listFiles(@RequestParam("bucketName") String bucketName, Model model, RedirectAttributes ra) {
         try {
-        	model.addAttribute("selectedBucket", bucketName);
+            model.addAttribute("selectedBucket", bucketName);
             model.addAttribute("files", s3Service.getFiles(bucketName));
-            model.addAttribute("selectedBucket", bucketName); // Keeps track of which bucket we are viewing
         } catch (Exception e) {
             ra.addFlashAttribute("message", "Error fetching files: " + e.getMessage());
             return "redirect:/s3";
@@ -49,7 +50,6 @@ public class S3FileController {
         return "s3bucket";
     }
     
-    // Updated to accept bucketName from the form
     @PostMapping("/upload")
     public String uploadFile(@RequestParam("file") MultipartFile file, 
                              @RequestParam("bucketName") String bucketName, 
@@ -60,10 +60,10 @@ public class S3FileController {
         } catch (Exception e) {
             ra.addFlashAttribute("message", "Upload Failed: " + e.getMessage());
         }
-        return "redirect:/s3";
+        // Redirecting to /files so the user stays in the current bucket view
+        return "redirect:/s3/files?bucketName=" + bucketName;
     }
 
-    // Updated to accept bucketName for download
     @GetMapping("/download")
     public ResponseEntity<byte[]> downloadFile(@RequestParam("bucketName") String bucketName, 
                                                @RequestParam("fileName") String fileName) {
@@ -87,7 +87,6 @@ public class S3FileController {
         } catch (Exception e) {
             ra.addFlashAttribute("message", "Delete Failed: " + e.getMessage());
         }
-        // Redirect back to the file list for the same bucket
         return "redirect:/s3/files?bucketName=" + bucketName;
     }
 }

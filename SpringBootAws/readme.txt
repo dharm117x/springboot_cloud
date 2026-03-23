@@ -1,17 +1,17 @@
 SQS_SNS: By terraform:
-------------------------
-Terraform automatically "picks up" every .tf file 
-or specific:
-terraform plan -out=tfplan sns-sqs-setup.tf
-terraform apply tfplan
-
+-----------------------
 
 terraform init: Initializes the directory by downloading the necessary AWS provider plugins.
 terraform plan: Previews exactly what Terraform will create, change, or delete without actually making changes yet.
 terraform apply: Executes the changes. You will be prompted to type yes to confirm the action
-
 terraform destroy: Destroy all.
 
+Terraform automatically "picks up" every .tf file 
+terraform plan -target=aws_s3_bucket.my_bucket -out=tfplan
+terraform apply tfplan
+terraform destroy
+
+Or better to put in specific fodler for each terraform file.
 
 
 SNS-SQS: By Simple comand
@@ -75,7 +75,9 @@ S3:  dk.static.site - us-east-1
 ----------------------
 aws s3 ls
 
-aws s3 mb s3://s3-java-pgm
+aws s3 mb s3://s3-java-pgm --default public
+aws s3api create-bucket --bucket s3-java-pgm --region us-east-1 --acl private
+
 
 aws s3api get-bucket-location --bucket s3-java-pgm
 

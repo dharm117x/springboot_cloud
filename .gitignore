@@ -8,6 +8,7 @@ release.properties
 
 # Local terraform directory (contains binaries and plugins)
 .terraform/
+tfplan
 
 # Terraform lock file
 .terraform.lock.hcl

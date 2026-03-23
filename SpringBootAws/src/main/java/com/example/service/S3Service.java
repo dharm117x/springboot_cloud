@@ -33,10 +33,15 @@ public class S3Service {
     }
     
     public List<String> getBuckets() {
-        return s3Client.listBuckets().buckets().stream()
+        List<Bucket> buckets = s3Client.listBuckets().buckets();
+        if (buckets == null || buckets.isEmpty()) {
+            throw new RuntimeException("No S3 buckets found in this AWS account.");
+        }
+        return buckets.stream()
                 .map(Bucket::name)
                 .collect(Collectors.toList());
     }
+
 
     // Updated: Accept bucketName as parameter
     public List<String> getFiles(String bucketName) {
