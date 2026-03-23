@@ -4,7 +4,7 @@
     {
       "Effect": "Allow",
       "Principal": {
-        "AWS": "arn:aws:iam::636851749624:user/dharm117aws"
+        "AWS": "arn:aws:iam::ACC_NO:user/dharm117aws"
       },
       "Action": [
         "s3:GetObject",
