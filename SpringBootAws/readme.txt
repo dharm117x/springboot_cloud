@@ -89,5 +89,13 @@ aws s3api put-bucket-policy --bucket s3-java-pgm --policy file://s3_policy.json
 aws s3 rb s3://s3-java-pgm --force
 
 
+Ec2-connect on cmd
+--------------------
+ssh -i "C:\path\to\your-key.pem" ec2-user@<YOUR_INSTANCE_PUBLIC_IP>
+
+scp -i "C:\path\to\your-key.pem" "C:\path\to\local-file.txt" ec2-user@<EC2-IP>:/home/ec2-user/
+
+Debug log:
+sudo cat /var/log/cloud-init-output.log
 
 -
