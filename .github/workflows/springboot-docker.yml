@@ -1,15 +1,20 @@
-name: Build & Push Docker Image
+name: SpringBoot Docker CI/CD
 
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'SpringBootDocker/**'
 
 jobs:
-  docker:
+  build:
     runs-on: ubuntu-latest
 
-    steps:
+    defaults:
+      run:
+        working-directory: SpringBootDocker
 
+    steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
@@ -29,7 +34,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/springboot-app:latest .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/springbootdocker:latest .
 
-    - name: Push Image to Docker Hub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/springboot-app:latest
+    - name: Push Docker Image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/springbootdocker:latest
