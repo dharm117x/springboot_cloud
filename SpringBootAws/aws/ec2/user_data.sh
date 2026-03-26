@@ -15,7 +15,7 @@ usermod -aG docker ec2-user
 docker --version
 
 # Install Java (optional)
-#yum install -y java-17-amazon-corretto
+yum install -y java-17-amazon-corretto
 
 # Run sample container
 docker run -d -p 80:80 nginx
@@ -24,4 +24,4 @@ docker run -d -p 80:80 nginx
 yum install -y git
 
 # OR run jar (optional)
-java -jar /home/ec2-user/app.jar
+#java -jar /home/ec2-user/app.jar
