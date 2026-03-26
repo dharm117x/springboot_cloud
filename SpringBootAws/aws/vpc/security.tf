@@ -42,16 +42,26 @@ resource "aws_security_group_rule" "egress" {
 }
 
 # 2. Security Group for RDS (Database)
+locals {
+  # List of default ports for MySQL, Oracle, and PostgreSQL
+  db_ports = [3306, 1521, 5432]
+}
+
 resource "aws_security_group" "rds_sg" {
-  name        = "rds-db-sg"
-  description = "Allow traffic from EC2 only"
+  name        = "rds-multi-security-group"
+  description = "Allow inbound traffic for multiple database engines"
   vpc_id      = aws_vpc.main.id
 
-  ingress {
-    from_port       = 5432 # Change to 3306 if using MySQL
-    to_port         = 5432
-    protocol        = "tcp"
-    security_groups = [aws_security_group.app_sg.id] 
+  # Dynamic block to create an ingress rule for each port in local.db_ports
+  dynamic "ingress" {
+    for_each = local.db_ports
+    content {
+      from_port       = ingress.value
+      to_port         = ingress.value
+      protocol        = "tcp"
+      # Limits access to the specified application security group
+      security_groups = [aws_security_group.app_sg.id]
+    }
   }
 
   egress {
@@ -61,5 +71,7 @@ resource "aws_security_group" "rds_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = { Name = "rds-security-group" }
+  tags = {
+    Name = "rds-multi-port-sg"
+  }
 }

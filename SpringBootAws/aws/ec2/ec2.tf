@@ -7,7 +7,6 @@ data "aws_vpc" "existing_vpc" {
 }
 
 # 2. Look up the existing App Security Group
-# CHANGED: Use underscores in the resource identifier
 data "aws_security_group" "app_existing_sg" {
   filter {
     name   = "tag:Name"

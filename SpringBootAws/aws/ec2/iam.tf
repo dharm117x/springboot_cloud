@@ -16,22 +16,22 @@ resource "aws_iam_role" "ec2_role" {
 
 #2. Attach Custom Policies
 resource "aws_iam_policy" "s3_policy" {
-  name   = "s3-access-policy"
+  name   = "s3-ec2-access-policy"
   policy = templatefile("${path.module}/policies/s3-policy.json", { bucket_arn = var.s3_bucket_arn })
 }
 
 resource "aws_iam_policy" "sqs_policy" {
-  name   = "sqs-access-policy"
+  name   = "sqs-ec2-access-policy"
   policy = templatefile("${path.module}/policies/sqs-policy.json", { queue_arn = var.sqs_queue_arn })
 }
 
 resource "aws_iam_policy" "sns_policy" {
-  name   = "sns-access-policy"
+  name   = "sns-ec2-access-policy"
   policy = templatefile("${path.module}/policies/sns-policy.json", { topic_arn = var.sns_topic_arn })
 }
 
 resource "aws_iam_policy" "rds_policy" {
-  name   = "rds-access-policy"
+  name   = "rds-ec2-access-policy"
   policy = templatefile("${path.module}/policies/rds-policy.json", { rds_arn = var.rds_instance_arn })
 }
 

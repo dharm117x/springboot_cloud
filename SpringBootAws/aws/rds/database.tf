@@ -22,7 +22,7 @@ data "aws_subnets" "private" {
 data "aws_security_group" "existing_rds_sg" {
   filter {
     name   = "tag:Name"
-    values = ["rds-security-group"] # Must match Name tag in your SG folder
+    values = ["rds-multi-security-group"] # Must match Name tag in your SG folder
   }
 }
 

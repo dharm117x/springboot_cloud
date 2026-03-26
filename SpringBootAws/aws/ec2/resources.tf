@@ -1,6 +1,6 @@
 # Create the S3 Bucket
 resource "aws_s3_bucket" "app_bucket" {
-  bucket = "s3-boot-pgm-mybucket"
+  bucket = "s3-ec2-pgm-mybucket"
 }
 
 # 2. Block Public Access
