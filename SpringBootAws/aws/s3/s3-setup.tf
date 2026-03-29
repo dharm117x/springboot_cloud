@@ -12,13 +12,3 @@ resource "aws_s3_bucket_public_access_block" "block" {
   ignore_public_acls      = true
   restrict_public_buckets = true
 }
-
-# 3. Attach the External JSON Policy
-resource "aws_s3_bucket_policy" "allow_access" {
-  bucket = aws_s3_bucket.my_bucket.id
-
-  # templatefile reads the JSON and swaps ${bucket_arn} for the real ARN
-  policy = templatefile("${path.module}/s3_policy.json", {
-    bucket_arn = aws_s3_bucket.my_bucket.arn
-  })
-}

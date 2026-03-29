@@ -1,9 +1,11 @@
 1. Install CloudWatch Agent on Windows/EC2/ECS
 msiexec /i amazon-cloudwatch-agent.msi
 
-sudo yum install amazon-cloudwatch-agent
+2. For Amazon Linux 2:
+sudo yum install amazon-cloudwatch-agent -y
 
-2. Create config file
+
+2. Create config file config.json
 -----------Windows----------
 {
   "logs": {
@@ -54,6 +56,10 @@ sudo yum install amazon-cloudwatch-agent
 -m onPremise ^
 -c file:C:\cwagent\config.json ^
 -s
+
+3.1 Start CloudWatch Agent-EC2 machine:
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+
 
 4. View logs
 Amazon CloudWatch

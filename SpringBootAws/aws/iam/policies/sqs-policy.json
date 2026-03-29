@@ -13,7 +13,7 @@
 				"sqs:ReceiveMessage",
 				"sqs:DeleteMessage"
 			],
-			"Resource": "${queue_arn}"
+			"Resource": ${jsonencode(queue_arns)}
 		}
 	]
 }

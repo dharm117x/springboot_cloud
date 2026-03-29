@@ -1,0 +1,104 @@
+aws configure: Set up your Access Key, Secret Key, Region, and Output format.
+aws configure ###### --profile qa-dev: Create a named profile for different environments (e.g., dev, staging, prod).
+
+aws sts get-caller-identity: Quickly verify which IAM user/role you are currently using.
+aws help: Get documentation for any service or command (e.g., aws rds help).
+
+IAM: (Identity & Access)
+-----------------------------
+aws iam list-users: See all IAM users in the account.
+aws iam create-user --user-name new-user: Create a new IAM identity.
+aws iam list-access-keys --user-name username: Check for active access keys for a specific user. 
+
+
+S3:  Setup and manage S3 buckets and objects using AWS CLI
+----------------------
+aws s3 ls: List all buckets or the contents of a specific bucket.
+aws s3 ls profile-avatars: List objects in the "profile-avatars" bucket.
+aws s3 mb s3://bucket-name: Create (Make) a new bucket. Note: Bucket names must be globally unique.
+aws s3 cp file.txt s3://bucket-name: Copy a file from local to S3 (or vice-versa).
+aws s3 sync . s3://bucket-name: Synchronise a local folder with an S3 bucket (only copies new/changed files).
+aws s3 rm s3://bucket/file: Delete a specific object from a bucket.
+
+
+aws s3api create-bucket --bucket s3-java-pgm --region us-east-1 --acl private
+aws s3api get-bucket-location --bucket s3-java-pgm
+aws s3api create-bucket --bucket your-unique-bucket-name --region us-west-2 --create-bucket-configuration LocationConstraint=us-west-2
+aws s3api put-bucket-policy --bucket s3-java-pgm --policy file://s3_policy.json
+
+aws s3 rb s3://s3-java-pgm --force
+
+
+EC2: Amazon EC2 (Compute)
+--------------------------- 
+aws ec2 describe-instances: View details of all your instances.
+aws ec2 start-instances --instance-ids i-123: Start a stopped instance.
+aws ec2 stop-instances --instance-ids i-123: Stop a running instance.
+aws ec2 describe-security-groups: List all security groups in your VPC.
+
+RDS: Amazon RDS (Database)
+--------------------------------
+aws rds describe-db-instances: List all databases and their current status (e.g., available, backing-up).
+aws rds start-db-instance --db-instance-identifier mydb: Start a stopped RDS instance.
+aws rds stop-db-instance --db-instance-identifier mydb: Stop a running RDS instance to save costs.
+aws rds modify-db-instance --db-instance-identifier mydb --allocated-storage 50: Scale up your database storage. 
+
+
+SNS-SQS: By Simple comand
+----------------------------
+Step 1: Create an SQS Queue:
+aws sqs
+
+aws sqs list-queues
+
+aws sqs create-queue --queue-name my-payment-queue
+aws sqs purge-queue --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-payment-queue
+
+
+Step 2: Get the Queue ARN:
+aws sqs get-queue-attributes --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-order-queue --attribute-names QueueArn
+aws sqs get-queue-attributes --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-user-queue --attribute-names QueueArn
+    
+"QueueArn": "arn:aws:sqs:us-east-1:AWS_ACC_NO:my-order-queue"
+    
+
+Step 4: Crate topic:
+-------------------------
+aws sns list-topics
+aws sns create-topic --name my-topic
+aws sns publish --topic-arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic --message "Hello from SNS"
+
+"TopicArn": "arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic"
+
+
+
+Step 5: Subscribe Queue to SNS Topic:
+aws sns subscribe --topic-arn arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic --protocol sqs --notification-endpoint arn:aws:sqs:us-east-1:AWS_ACC_NO:my-order-queue
+SubscriptionArn": "arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic:5e9cb900-148a-4b0d-b28d-0f764c729528
+
+aws sns subscribe --topic-arn arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic --protocol sqs --notification-endpoint arn:aws:sqs:us-east-1:AWS_ACC_NO:my-user-queue
+SubscriptionArn": "arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic:ac45231c-dff7-4549-9cc1-58d213cbc31a
+
+
+Step 4: Attach Filter Policy to Subscription:  
+aws sns set-subscription-attributes --subscription-arn arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic:5e9cb900-148a-4b0d-b28d-0f764c729528 --attribute-name FilterPolicy --attribute-value "{\"eventType\": [\"OrderType\"]}"
+  
+aws sns set-subscription-attributes --subscription-arn arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic:ac45231c-dff7-4549-9cc1-58d213cbc31a --attribute-name FilterPolicy --attribute-value "{\"eventType\": [\"UserType\"]}"
+  
+aws sns get-subscription-attributes --subscription-arn arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic:ac45231c-dff7-4549-9cc1-58d213cbc31a
+
+
+Recive message by cmd:
+------------------------
+aws sqs receive-message --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-user-queue --message-attribute-names All
+
+  
+
+Delete SNS SQS
+---------------------
+aws sns delete-topic --topic-arn arn:aws:sns:us-east-1:AWS_ACC_NO:my-topic
+
+aws sqs delete-queue --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-order-queue
+aws sqs delete-queue --queue-url https://sqs.us-east-1.amazonaws.com/AWS_ACC_NO/my-user-queue
+
+

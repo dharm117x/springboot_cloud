@@ -22,7 +22,9 @@ resource "aws_iam_policy" "s3_policy" {
 
 resource "aws_iam_policy" "sqs_policy" {
   name   = "sqs-ec2-access-policy"
-  policy = templatefile("${path.module}/policies/sqs-policy.json", { queue_arn = var.sqs_queue_arn })
+  policy = templatefile("${path.module}/policies/sqs-policy.json", { 
+    queue_arns = [var.sqs_order_queue_arn, var.sqs_user_queue_arn] 
+  })
 }
 
 resource "aws_iam_policy" "sns_policy" {
@@ -35,30 +37,27 @@ resource "aws_iam_policy" "rds_policy" {
   policy = templatefile("${path.module}/policies/rds-policy.json", { rds_arn = var.rds_instance_arn })
 }
 
+resource "aws_iam_policy" "ecr_read_policy" {
+  name   = "ecr-read-access-policy"
+  policy = templatefile("${path.module}/policies/ecr-policy.json", { ecr_repos_arn = var.ecr_repository_arn })
+}
 
-#3.Attach Policies to Role
+
+#3.Attach S3 policy to Role
 resource "aws_iam_role_policy_attachment" "attach_s3" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.s3_policy.arn
 }
 
-resource "aws_iam_role_policy_attachment" "attach_sqs" {
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = aws_iam_policy.sqs_policy.arn
-}
+#3.1 Attach Policies to Role
+resource "aws_iam_role_policy_attachment" "attachments" {
+  for_each = {
+    sqs      = aws_iam_policy.sqs_policy.arn
+    sns      = aws_iam_policy.sns_policy.arn
+    rds      = aws_iam_policy.rds_policy.arn
+    ecr_read = aws_iam_policy.ecr_read_policy.arn
+  }
 
-resource "aws_iam_role_policy_attachment" "attach_sns" {
   role       = aws_iam_role.ec2_role.name
-  policy_arn = aws_iam_policy.sns_policy.arn
-}
-
-resource "aws_iam_role_policy_attachment" "attach_rds" {
-  role       = aws_iam_role.ec2_role.name
-  policy_arn = aws_iam_policy.rds_policy.arn
-}
-
-#4.Instance Profile (Attach to EC2)
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "ec2-app-profile"
-  role = aws_iam_role.ec2_role.name
+  policy_arn = each.value
 }

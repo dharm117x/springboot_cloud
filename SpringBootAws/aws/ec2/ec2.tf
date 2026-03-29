@@ -26,6 +26,17 @@ data "aws_subnets" "public" {
   }
 }
 
+# 3.1 Looks up existing IAM Instance Profile
+data "aws_iam_role" "existing_role" {
+  name = "ec2-app-role"
+}
+
+#4.Instance Profile (Attach to EC2)
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "ec2-app-profile"
+  role = data.aws_iam_role.existing_role.name #name safer then id
+}
+
 resource "aws_instance" "app_server_ec2" {
   ami           = var.ami_id
   instance_type = var.instance_type
@@ -39,7 +50,7 @@ resource "aws_instance" "app_server_ec2" {
   associate_public_ip_address = true
 
   root_block_device {
-    volume_size = 15
+    volume_size = 10
     volume_type = "gp3"
   }
 

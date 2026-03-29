@@ -61,7 +61,7 @@
 					<docker>
 						<publishRegistry>
 							<username>${docker.user}</username>
-							<password>${activemq.version}</password>
+							<password>${docker.password}</password>
 						</publishRegistry>
 					</docker>
 				</configuration>
@@ -76,7 +76,7 @@
 							docker.io/dharm117docker/springboot:${project.version}</image>
 						<auth>
 							<username>${docker.user}</username>
-							<password>${docker.password}}</password>
+							<password>${docker.password}</password>
 						</auth>
 
 					</to>

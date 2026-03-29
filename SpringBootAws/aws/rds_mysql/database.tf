@@ -34,7 +34,7 @@ resource "aws_db_instance" "mysql_single_az" {
   engine               = "mysql"
   engine_version       = "8.4.7"
   instance_class       = var.instance_class # Common for single-AZ/dev setups
-  identifier           = "my-single-az-db"
+  identifier           = "mysql-single-az-db"
   username             = "admin"
   password             = var.db_password
   
@@ -42,7 +42,7 @@ resource "aws_db_instance" "mysql_single_az" {
   multi_az             = false
   
   # Optional: Lock it to a specific AZ
-  availability_zone    = var.region
+  availability_zone    = var.availability_zone
 
   db_subnet_group_name   = data.aws_db_subnet_group.existing_db_subnet_group.name
   vpc_security_group_ids = [data.aws_security_group.existing_rds_sg.id]
