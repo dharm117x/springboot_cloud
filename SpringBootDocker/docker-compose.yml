@@ -1,0 +1,14 @@
+services:
+  my-app:
+    image: dharm117docker/springboot:1.1
+    container_name: my-boo-app
+    privileged: true  # Simplest way for EC2 to see newly attached USB/IP devices
+    volumes:
+      - "/dev:/dev"   # Maps the entire /dev to handle dynamic USB/IP attaches
+    ports:
+      - "9001:9001"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://<Host>.rds.amazonaws.com:3306/app_db
+      - SPRING_DATASOURCE_USERNAME=
+      - SPRING_DATASOURCE_PASSWORD=
+    restart: unless-stopped

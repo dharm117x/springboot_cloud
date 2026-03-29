@@ -38,6 +38,9 @@ resource "aws_db_instance" "mysql_single_az" {
   username             = "admin"
   password             = var.db_password
   
+  # This creates the initial database
+  db_name              = "applicaion_db" 
+  
   # Ensure Multi-AZ is disabled
   multi_az             = false
   

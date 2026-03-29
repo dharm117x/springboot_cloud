@@ -13,6 +13,7 @@ terraform.tfvars
 
 # Terraform lock file
 .terraform.lock.hcl
+.terraform.tfstate.lock.info
 
 # State files (contains sensitive info and infrastructure status)
 *.tfstate
@@ -50,8 +51,8 @@ frontend/.git/
 Thumbs.db
 
 # Spring Boot specific
-application-*.yml
-application-*.properties
+application-local.yml
+application-local.properties
 !application.properties   # keep default config if needed
 
 # Angular / Node frontend
