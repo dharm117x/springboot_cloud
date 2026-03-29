@@ -24,3 +24,25 @@ Debug log:
 sudo cat /var/log/cloud-init-output.log
 
 -
+ARN: Explaination:
+---------
+arn:partition:service:region:account-id:resource
+
+arn:aws:logs:us-east-1:ACC_NO:log-group:/aws/ec2/my-ec2-logsN
+
+log-group
+👉 Type of resource
+CloudWatch has:
+
+log-group
+log-stream
+
+/aws/ec2/my-ec2-logs
+
+👉 Log group name
+This is just a string name, often following AWS conventions:
+
+Prefix	Meaning
+/aws/ec2/	Logs related to EC2
+/aws/lambda/	Lambda logs
+custom-name	Your own naming

@@ -40,9 +40,11 @@ sudo yum install amazon-cloudwatch-agent -y
       "files": {
         "collect_list": [
           {
-            "file_path": "/var/log/app.log",
-            "log_group_name": "aws-app-logs",
-            "log_stream_name": "{instance_id}"
+            "file_path": "/home/ec2-user/app-logs/app/logs/app.log",
+            "log_group_name": "/aws/ec2/my-ec2-logs",
+            "log_stream_name": "{instance_id}",
+            "timezone": "UTC",
+            "multi_line_start_pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
           }
         ]
       }
@@ -58,10 +60,29 @@ sudo yum install amazon-cloudwatch-agent -y
 -s
 
 3.1 Start CloudWatch Agent-EC2 machine:
-sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+-a fetch-config \
+-m ec2 \
+-c file:/home/ec2-user/cloudwatch-agent/config.json \
+-s
 
 
 4. View logs
+sudo systemctl status amazon-cloudwatch-agent
+sudo systemctl stop amazon-cloudwatch-agent
+sudo systemctl start amazon-cloudwatch-agent
+
+
 Amazon CloudWatch
 → Log Groups → aws-app-logs
+
+Debug:
+aws logs describe-log-groups --region us-east-1
+
+sudo tail -n 50 /opt/aws/amazon-cloudwatch-agent/logs/amazon-cloudwatch-agent.log
+
+sudo systemctl restart amazon-cloudwatch-agent
+
+curl http://44.203.171.229/latest/meta-data/iam/security-credentials/
+
 

@@ -18,7 +18,14 @@ docker --version
 yum install -y java-17-amazon-corretto
 
 # Run sample container
-docker run -d -p 80:80 nginx
+docker run -d \
+  --name nginx-app \
+  --log-driver=awslogs \
+  --log-opt awslogs-region=us-east-1 \
+  --log-opt awslogs-group=docker-logs \
+  --log-opt awslogs-stream=nginx-stream \
+  -p 80:80 \
+  nginx
 
 # Install Git
 yum install -y git

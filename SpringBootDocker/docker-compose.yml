@@ -5,9 +5,12 @@ services:
     privileged: true  # Simplest way for EC2 to see newly attached USB/IP devices
     volumes:
       - "/dev:/dev"   # Maps the entire /dev to handle dynamic USB/IP attaches
+      - "/home/ec2-user/app-logs:/app/logs"
     ports:
       - "9001:9001"
     environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - LOGGING_FILE_NAME=/app/logs/app.log
       - SPRING_DATASOURCE_URL=jdbc:mysql://<Host>.rds.amazonaws.com:3306/app_db
       - SPRING_DATASOURCE_USERNAME=
       - SPRING_DATASOURCE_PASSWORD=

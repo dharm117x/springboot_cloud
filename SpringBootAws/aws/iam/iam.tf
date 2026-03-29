@@ -42,7 +42,13 @@ resource "aws_iam_policy" "ecr_read_policy" {
   policy = templatefile("${path.module}/policies/ecr-policy.json", { ecr_repos_arn = var.ecr_repository_arn })
 }
 
-
+resource "aws_iam_policy" "cloudwatch_policy" {
+  name   = "cloudwatch-logs-policy"
+  policy = templatefile("${path.module}/policies/cloudwatch-logs-policy.json", {
+    log_group_arn = var.log_group_arn
+  })
+}
+  
 #3.Attach S3 policy to Role
 resource "aws_iam_role_policy_attachment" "attach_s3" {
   role       = aws_iam_role.ec2_role.name
@@ -52,10 +58,11 @@ resource "aws_iam_role_policy_attachment" "attach_s3" {
 #3.1 Attach Policies to Role
 resource "aws_iam_role_policy_attachment" "attachments" {
   for_each = {
-    sqs      = aws_iam_policy.sqs_policy.arn
-    sns      = aws_iam_policy.sns_policy.arn
-    rds      = aws_iam_policy.rds_policy.arn
-    ecr_read = aws_iam_policy.ecr_read_policy.arn
+    sqs        = aws_iam_policy.sqs_policy.arn
+    sns        = aws_iam_policy.sns_policy.arn
+    rds        = aws_iam_policy.rds_policy.arn
+    ecr_read   = aws_iam_policy.ecr_read_policy.arn
+    cloudwatch = aws_iam_policy.cloudwatch_policy.arn
   }
 
   role       = aws_iam_role.ec2_role.name

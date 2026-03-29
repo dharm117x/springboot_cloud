@@ -36,9 +36,12 @@ docker container stop <container_id>
 docker container start <container_id>
 docker container remove <container_id>
 
+mkdir -p /home/ec2-user/app-logs
+chmod -R 777 /home/ec2-user/app-logs
 
 docker run -d \
   --name my-app \
+  -v /home/ec2-user/app-logs:/app/logs \
   -p 9001:9001 \
   -e SPRING_DATASOURCE_URL=jdbc:mysql://<Host>.rds.amazonaws.com:3306/app_db \
   -e SPRING_DATASOURCE_USERNAME=user \

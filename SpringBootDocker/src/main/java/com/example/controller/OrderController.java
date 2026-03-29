@@ -2,6 +2,8 @@ package com.example.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import com.example.service.OrderService;
 @RequestMapping("/api/orders")
 @CrossOrigin(origins = "*")
 public class OrderController {
+	private static final Logger LOG = LoggerFactory.getLogger(OrderController.class);
 
     @Value("${app.order-limit:10}")
     private int orderLimit;
@@ -32,11 +35,13 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponse>> getAllOrders() {
+    	LOG.info("Fetching all orders with limit: {}", orderLimit);
         return ResponseEntity.ok(orderService.getAllOrders());
     }
     
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+    	LOG.info("Received order request for email: {}", orderRequest.customerEmail());
         OrderResponse response = orderService.placeOrder(orderRequest);
         
         if ("FAILED".equals(response.status())) {

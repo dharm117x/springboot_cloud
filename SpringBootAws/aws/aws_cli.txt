@@ -35,6 +35,9 @@ aws ec2 describe-instances: View details of all your instances.
 aws ec2 start-instances --instance-ids i-123: Start a stopped instance.
 aws ec2 stop-instances --instance-ids i-123: Stop a running instance.
 aws ec2 describe-security-groups: List all security groups in your VPC.
+aws ec2 reboot-instances --instance-ids i-042084135fd58c523
+
+
 
 RDS: Amazon RDS (Database)
 --------------------------------

@@ -9,5 +9,6 @@ variable "ecr_repository_arn" {}
 variable "sns_topic_arn" {}
 variable "sqs_order_queue_arn" {}
 variable "sqs_user_queue_arn" {}
+variable "log_group_arn" {}
 
 
