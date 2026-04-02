@@ -34,7 +34,21 @@ scp -i "C:\path\to\your-key.pem" "C:\path\to\local-file.txt" ec2-user@<EC2-IP>:/
 Debug log:
 sudo cat /var/log/cloud-init-output.log
 
+ECR:-coonect on cmd
+------------------------
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
+
+docker build -t springboot-app .
+
+docker tag springboot-app:latest <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest
+
+docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest
+
+docker pull <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest
+
+docker run -d -p 9001:9001 <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest
 
 ARN: Explaination:
 ---------
 arn:partition:service:region:account-id:resource
+

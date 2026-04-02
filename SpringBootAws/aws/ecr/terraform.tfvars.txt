@@ -1,0 +1,3 @@
+ecr_repo_arn 		= "arn:aws:ecr:us-east-1:ACC_NO:repository/my-ecr-repo"
+iam_user_arn        = "arn:aws:iam::ACC_NO:user/dharm117aws"
+ec2_role_arn        = "arn:aws:sts::ACC_NO:assumed-role/ec2-app-role/*"
