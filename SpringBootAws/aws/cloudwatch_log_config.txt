@@ -76,6 +76,14 @@ sudo systemctl start amazon-cloudwatch-agent
 Amazon CloudWatch
 → Log Groups → aws-app-logs
 
+Note: Config check:
+--------------------
+Cloud-watch group name:my-ec2-logs
+Policy permissions:arn:aws:logs:us-east-1:ACC_NO:log-group:my-ec2-logs
+Config File: "log_group_name": "my-ec2-logs"
+
+
+
 Debug:
 aws logs describe-log-groups --region us-east-1
 

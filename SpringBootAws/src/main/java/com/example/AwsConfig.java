@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import io.awspring.cloud.sns.core.SnsTemplate;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -68,5 +69,10 @@ public class AwsConfig {
         		.region(Region.of(region))
         		.build();
     }
+
+    @Bean
+    public SnsTemplate snsTemplate(SnsClient client) {
+		return new SnsTemplate(client);
+	}
 
 }

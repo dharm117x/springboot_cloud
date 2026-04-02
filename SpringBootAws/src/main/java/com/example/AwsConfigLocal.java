@@ -43,9 +43,6 @@ public class AwsConfigLocal {
     @Value("${proxy.port}")
     private int proxyPort;
 
-    @Value("${aws.s3.endpoint}")
-	private String endpoint;
-    
 
     //@Bean
 	public SqsMessagingMessageConverter sqsMessagingMessageConverter(ObjectMapper objectMapper) {
@@ -91,7 +88,6 @@ public class AwsConfigLocal {
         		.build();
     }
 
-    
     //@Bean
     public SqsAsyncClient sqsAsyncClientWithProxy(AwsCredentialsProvider credentialsProvider) {
         return SqsAsyncClient.builder()
@@ -105,11 +101,6 @@ public class AwsConfigLocal {
 	                    .build()))
                 .build();
     }
-
-    @Bean
-    public SnsTemplate snsTemplate(SnsClient client) {
-		return new SnsTemplate(client);
-	}
 
     
     @Bean
@@ -134,7 +125,10 @@ public class AwsConfigLocal {
                 .build();
     }
 
-    
-    
+    @Bean
+    public SnsTemplate snsTemplate(SnsClient client) {
+		return new SnsTemplate(client);
+	}
+
 }
 

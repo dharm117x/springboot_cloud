@@ -13,6 +13,17 @@ terraform destroy
 
 Or better to put in specific fodler for each terraform file.
 
+Terrform setup order:
+----------------------
+1. VPC
+2. S3
+3. rds
+4. Sqs and sns
+5. Cloudwatch
+6. ECR
+7. IAM (Above craeted firs becoz of policy attachment)
+8. Ec2
+7. Lambda
 
 Ec2-connect on cmd
 --------------------
@@ -23,26 +34,7 @@ scp -i "C:\path\to\your-key.pem" "C:\path\to\local-file.txt" ec2-user@<EC2-IP>:/
 Debug log:
 sudo cat /var/log/cloud-init-output.log
 
--
+
 ARN: Explaination:
 ---------
 arn:partition:service:region:account-id:resource
-
-arn:aws:logs:us-east-1:ACC_NO:log-group:/aws/ec2/my-ec2-logsN
-
-log-group
-👉 Type of resource
-CloudWatch has:
-
-log-group
-log-stream
-
-/aws/ec2/my-ec2-logs
-
-👉 Log group name
-This is just a string name, often following AWS conventions:
-
-Prefix	Meaning
-/aws/ec2/	Logs related to EC2
-/aws/lambda/	Lambda logs
-custom-name	Your own naming

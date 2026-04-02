@@ -35,7 +35,8 @@ aws ec2 describe-instances: View details of all your instances.
 aws ec2 start-instances --instance-ids i-123: Start a stopped instance.
 aws ec2 stop-instances --instance-ids i-123: Stop a running instance.
 aws ec2 describe-security-groups: List all security groups in your VPC.
-aws ec2 reboot-instances --instance-ids i-042084135fd58c523
+
+aws ec2 stop-instances --instance-ids i-042084135fd58c523
 
 
 
@@ -45,6 +46,8 @@ aws rds describe-db-instances: List all databases and their current status (e.g.
 aws rds start-db-instance --db-instance-identifier mydb: Start a stopped RDS instance.
 aws rds stop-db-instance --db-instance-identifier mydb: Stop a running RDS instance to save costs.
 aws rds modify-db-instance --db-instance-identifier mydb --allocated-storage 50: Scale up your database storage. 
+
+aws rds stop-db-instance --db-instance-identifier mysql-single-az-db
 
 
 SNS-SQS: By Simple comand
