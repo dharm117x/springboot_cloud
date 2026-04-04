@@ -8,6 +8,7 @@ variable "ecr_repo_name" {
 
 variable "ecr_repo_arn" {}
 variable "iam_user_arn" {}
+variable "ec2_role_arn" {}
 
 
 
