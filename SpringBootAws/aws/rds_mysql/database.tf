@@ -52,3 +52,4 @@ resource "aws_db_instance" "mysql_single_az" {
   
   skip_final_snapshot    = true
 }
+

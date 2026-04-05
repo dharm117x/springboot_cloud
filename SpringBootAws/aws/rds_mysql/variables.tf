@@ -9,3 +9,4 @@ variable "db_password" {
 
 variable "availability_zone" {}
 variable "instance_class" {}
+variable "rds_instance_arn" {}
