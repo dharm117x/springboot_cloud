@@ -41,14 +41,26 @@ resource "aws_ecs_service" "main" {
   name            = "springboot-service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   task_definition = aws_ecs_task_definition.ecs_task.arn
-  desired_count   = 1
+  desired_count   = 2
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = var.subnet_ids
-    assign_public_ip = true
-    security_groups  = var.security_group_ids # Pass as a variable
+    # Dynamically use the full list of IDs from your data lookups
+    subnets          = data.aws_subnets.public_subnets.ids
+    security_groups  = [data.aws_security_group.app_existing_sg.id, data.aws_security_group.rds_existing_sg.id]    
+    assign_public_ip = true 
   }
 
-  depends_on = [aws_iam_role_policy_attachment.ecs_execution_attach]
+  # ADDED: Load Balancer Block
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app_tg.arn
+    container_name   = "springboot-container" # Must match the 'name' in your container-def.json
+    container_port   = 9001             # Your Spring Boot Port
+  }
+
+  # Ensure IAM and ALB Listener are ready first
+  depends_on = [
+    aws_iam_role_policy_attachment.ecs_execution_attach,
+    aws_lb_listener.http
+  ]
 }

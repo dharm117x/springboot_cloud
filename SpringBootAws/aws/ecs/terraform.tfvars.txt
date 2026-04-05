@@ -1,5 +1,6 @@
 account_no			 = "ACC_NO"
 ecr_repository_url	 = "ACC_NO.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest"
 rds_endpoint		 = "mysql-single-az-db.ce3i02g225kv.us-east-1.rds.amazonaws.com"
+db_name              = applicatin_db
 db_user				 = "admin"
 db_password			 = "******"
