@@ -3,6 +3,8 @@ package com.example.service;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.MessageHeaders;
@@ -24,7 +26,8 @@ import software.amazon.awssdk.services.sns.model.PublishResponse;
 
 @Service
 public class SnsSqsService {
-	
+    private static final Logger LOG = LoggerFactory.getLogger(SnsSqsService.class);
+    
 	@Value("${sns.topic-arn:test-topic-arn}")
     private String topicArn;
 
@@ -39,6 +42,7 @@ public class SnsSqsService {
 	
 	
 	public void sendSQSMessage(MessageModel messageModel) throws JsonProcessingException {
+		LOG.info("Preparing to send message to SQS: {}", messageModel);
 		if ("USER".equals(messageModel.getDataType())) {
 			String jsonToSend = getMessage(messageModel, UserTo.class);
 			sqsTemplate.send("my-user-queue", jsonToSend);
@@ -49,6 +53,7 @@ public class SnsSqsService {
 	}
 	
 	public void sendSNSMessage(MessageModel messageModel) throws JsonProcessingException {
+		LOG.info("Preparing to send message to SNS: {}", messageModel);
 		if ("USER".equals(messageModel.getDataType())) {
 			String jsonToSend = getMessage(messageModel, UserTo.class);
 			sendSnsMessageByTemplaate1(jsonToSend, "UserType");
@@ -58,18 +63,18 @@ public class SnsSqsService {
 		}
 	}
 	
-	public void sendSnsMessageByTemplaate1(String jsonMessage, String type) {
+	private void sendSnsMessageByTemplaate1(String jsonMessage, String type) {
 		SnsNotification<String> notification = SnsNotification.builder(jsonMessage)
 				.header(MessageHeaders.CONTENT_TYPE, "application/json")
 				.header("eventType", type).build();
 		snsTemplate.sendNotification("my-topic", notification);
 	}
 
-	public void sendSnsMessageByTemplaate2(String jsonMessage, String type) {
+	private void sendSnsMessageByTemplaate2(String jsonMessage, String type) {
 		snsTemplate.convertAndSend("my-topic", jsonMessage, Map.of("eventType", type));
 	}
 	
-	public void sendSnsMessageByClinet(String message, String type) throws JsonProcessingException {
+	private void sendSnsMessageByClinet(String message, String type) throws JsonProcessingException {
 		Map<String, MessageAttributeValue> msgAttr = Map.of(
 				"eventType",
 				MessageAttributeValue.builder().dataType("String").stringValue(type).build());

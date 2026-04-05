@@ -5,3 +5,5 @@ spring:
         listener:
           max-number-of-messages: 10
           concurrency: 5
+  flyway:
+    locations: "classpath:db/migration/{vendor}"

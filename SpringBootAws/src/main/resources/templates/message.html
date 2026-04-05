@@ -11,6 +11,10 @@ Order: { "id":101, "userId":"Dharmendra", "product": "Moto phone", "quantity":1,
  
 </span>   
 
+<br/><br/>
+<a th:href="@{/orders}">Go to Orders Page</a>
+<hr/>
+
 <form th:action="@{/message/produce}" th:object="${model}" method="post">
     <label>Paste JSON Data:</label><br/>
     <!-- th:field matches the property name in MessageForm -->
@@ -34,6 +38,7 @@ Order: { "id":101, "userId":"Dharmendra", "product": "Moto phone", "quantity":1,
 
     <button type="submit">Send Message</button>
 </form>
+
 
 </body>
 </html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<body>
+
+    <!-- Dynamic Form: Changes title based on if ID exists -->
+    <h2 th:text="${order.id == null} ? 'Add New Order' : 'Edit Order'">Form</h2>
+    
+    <form th:action="@{/orders/update}" th:object="${order}" method="post">
+        <!-- Hidden ID: Critical for Update vs Create -->
+        <input type="hidden" th:field="*{id}" />
+        
+        <label>Item Name:</label>
+        <input type="text" th:field="*{product}" required />
+        <input type="text" th:field="*{quantity}" required />
+        <input type="text" th:field="*{total}" required />
+        
+        <button type="submit" th:text="${order.id == null} ? 'Add' : 'Update'">Submit</button>
+        <a th:if="${order.id != null}" th:href="@{/orders}">Cancel</a>
+    </form>
+
+    <hr>
+
+    <h2>Orders List</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ord : ${orders}">
+                <td th:text="${ord.id}"></td>
+                <td th:text="${ord.product}"></td>
+                <td th:text="${ord.quantity}"></td>
+                <td th:text="${ord.total}"></td>
+                <td>
+                    <!-- Edit: Reloads page with this order in the form -->
+                    <a th:href="@{/orders/edit/{id}(id=${ord.id})}">Edit</a>
+                    
+                    <!-- Delete -->
+                    <a th:href="@{/orders/delete/{id}(id=${ord.id})}" 
+                       onclick="return confirm('Delete this item?')">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>

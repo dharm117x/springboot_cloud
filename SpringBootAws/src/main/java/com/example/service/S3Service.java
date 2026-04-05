@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 @Service
 public class S3Service {
+    private static final Logger LOG = LoggerFactory.getLogger(S3Service.class);
 
     // Default bucket from properties (used if no bucket is selected)
     @Value("${aws.s3.bucket}")
@@ -33,6 +36,7 @@ public class S3Service {
     }
     
     public List<String> getBuckets() {
+    	LOG.info("Fetching S3 buckets for AWS account");
         List<Bucket> buckets = s3Client.listBuckets().buckets();
         if (buckets == null || buckets.isEmpty()) {
             throw new RuntimeException("No S3 buckets found in this AWS account.");
@@ -45,6 +49,7 @@ public class S3Service {
 
     // Updated: Accept bucketName as parameter
     public List<String> getFiles(String bucketName) {
+    	LOG.info("Fetching files from bucket: {}", bucketName);
         ListObjectsV2Request listRequest = ListObjectsV2Request.builder()
                 .bucket(bucketName)
                 .build();
@@ -56,6 +61,7 @@ public class S3Service {
 
     // Updated: Accept bucketName as parameter
     public void uploadFile(String bucketName, MultipartFile file) throws IOException {
+    	LOG.info("Uploading file '{}' to bucket '{}'", file.getOriginalFilename(), bucketName);
         PutObjectRequest putRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(file.getOriginalFilename())
@@ -65,6 +71,7 @@ public class S3Service {
     }
     
     public void deleteFile(String bucketName, String key) {
+    	LOG.info("Deleting file '{}' from bucket '{}'", key, bucketName);
         s3Client.deleteObject(DeleteObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
