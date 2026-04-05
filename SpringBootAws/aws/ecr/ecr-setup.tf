@@ -29,12 +29,12 @@ resource "aws_ecr_lifecycle_policy" "ecr_cleanup_policy" {
 }
 
 # 3. Define IAM Policy for EC2 Access
-resource "aws_iam_policy" "ecr_read_write_policy" {
-  name        = "ecr-read-write-policy"
+resource "aws_iam_policy" "ecr_ec2_access_policy" {
+  name        = "ecr-ec2-access-policy"
   description = "Policy for EC2 to push/pull from ECR"
   
   # Point to the repository ARN created above
-  policy = templatefile("${path.module}/policies/ecr-read-write-policy.json", { 
+  policy = templatefile("${path.module}/policies/ecr-ec2-access-policy.json", { 
     ecr_arn = aws_ecr_repository.repo.arn 
   })
 }
@@ -45,7 +45,7 @@ data "aws_iam_role" "existing_role" {
 }
 
 # 5. Attach the IAM Policy to the Role
-resource "aws_iam_role_policy_attachment" "attach_read_write" {
+resource "aws_iam_role_policy_attachment" "attach_ec2_access" {
   role       = data.aws_iam_role.existing_role.name
-  policy_arn = aws_iam_policy.ecr_read_write_policy.arn
+  policy_arn = aws_iam_policy.ecr_ec2_access_policy.arn
 }
