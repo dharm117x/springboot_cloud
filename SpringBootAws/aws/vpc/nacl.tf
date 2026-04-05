@@ -24,6 +24,16 @@ resource "aws_network_acl" "public_nacl" {
     to_port    = 8090
   }
 
+# Inbound: Allow SSH (22) for Admin Access (Optional, but useful for debugging)
+ ingress {
+    protocol   = "tcp"
+    rule_no    = 115           # New rule number
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"   # Or your specific IP for better security
+    from_port  = 22
+    to_port    = 22
+  }
+
   # Inbound: Allow Return Traffic (Ephemeral Ports)
   # Essential for ALB health checks and container updates
   ingress {
