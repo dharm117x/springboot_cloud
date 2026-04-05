@@ -1,52 +1,13 @@
-# 1. Look up the existing VPC
-data "aws_vpc" "existing_vpc" {
-  filter {
-    name   = "tag:Name"
-    values = ["main-vpc"]
-  }
-}
-
-# 2. Look up the existing App Security Group
-data "aws_security_group" "app_existing_sg" {
-  filter {
-    name   = "tag:Name"
-    values = ["app-security-group"] 
-  }
-}
-
-# 3. Look up the public subnet
-data "aws_subnets" "public" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.existing_vpc.id]
-  }
-  filter {
-    name   = "tag:Name"
-    values = ["public-subnet"] 
-  }
-}
-
-# 3.1 Looks up existing IAM Instance Profile
-data "aws_iam_role" "existing_role" {
-  name = "ec2-app-role"
-}
-
-#4.Instance Profile (Attach to EC2)
-resource "aws_iam_instance_profile" "ec2_profile" {
-  name = "ec2-app-profile"
-  role = data.aws_iam_role.existing_role.name #name safer then id
-}
-
+# This file defines the EC2 instance for the application server. It uses an existing security group and a specified AMI and instance type. The user data script is used to configure the instance on launch.
 resource "aws_instance" "app_server_ec2" {
   ami           = var.ami_id
   instance_type = var.instance_type
   
   subnet_id = data.aws_subnets.public.ids[0]
-  vpc_security_group_ids = [data.aws_security_group.app_existing_sg.id]
   
-  key_name             = var.key_name
-  iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
-  
+  vpc_security_group_ids      = [data.aws_security_group.app_existing_sg.id]
+  key_name                    = var.key_name
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
   associate_public_ip_address = true
 
   root_block_device {
