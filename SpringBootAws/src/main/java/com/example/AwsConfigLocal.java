@@ -28,19 +28,19 @@ import software.amazon.awssdk.services.sqs.SqsClient;
 @Profile("local")
 public class AwsConfigLocal {
 
+    @Value("${aws.region}")
+    private String region;
+
     @Value("${aws.accesskey}")
     private String accesskey;
 
     @Value("${aws.secretkey}")
     private String secretkey;
 
-    @Value("${aws.region}")
-    private String region;
-
-    @Value("${proxy.host}")
+    @Value("${proxy.host:localhost}")
     private String proxyHost;
 
-    @Value("${proxy.port}")
+    @Value("${proxy.port:8080}")
     private int proxyPort;
 
 

@@ -32,14 +32,14 @@ data "aws_db_subnet_group" "existing_db_subnet_group" {
 resource "aws_db_instance" "mysql_single_az" {
   allocated_storage    = 20
   engine               = "mysql"
-  engine_version       = "8.4.7"
+  engine_version       = "8.0.45"
   instance_class       = var.instance_class # Common for single-AZ/dev setups
   identifier           = "mysql-single-az-db"
   username             = "admin"
   password             = var.db_password
   
   # This creates the initial database
-  db_name              = "applicaion_db" 
+  db_name              = "app_db" 
   
   # Ensure Multi-AZ is disabled
   multi_az             = false

@@ -56,10 +56,10 @@ public class SnsSqsService {
 		LOG.info("Preparing to send message to SNS: {}", messageModel);
 		if ("USER".equals(messageModel.getDataType())) {
 			String jsonToSend = getMessage(messageModel, UserTo.class);
-			sendSnsMessageByTemplaate1(jsonToSend, "UserType");
+			sendSnsMessageByTemplaate2(jsonToSend, "UserType");
 		} else {
 			String jsonToSend = getMessage(messageModel, OrderTo.class);
-			sendSnsMessageByTemplaate2(jsonToSend, "OrderType");
+			sendSnsMessageByClinet(jsonToSend, "OrderType");
 		}
 	}
 	

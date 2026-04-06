@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Allow-SNS-SendMessage",
+      "Effect": "Allow",
+      "Principal": { "Service": "sns.amazonaws.com" },
+      "Action": "sqs:SendMessage",
+      "Resource": "${sqs_arn}",
+      "Condition": {
+        "ArnEquals": { "aws:SourceArn": "${sns_arn}" },
+        "StringEquals": { "aws:SourceAccount": "${account_id}" }
+      }
+    }
+  ]
+}

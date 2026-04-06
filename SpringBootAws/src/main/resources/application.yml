@@ -3,7 +3,10 @@ spring:
     aws:
       sqs:
         listener:
+          queue-not-found-strategy: FAILING
           max-number-of-messages: 10
           concurrency: 5
+      credentials:
+        instance-profile: true
   flyway:
-    locations: "classpath:db/migration/{vendor}"
+    locations: "classpath:db/migration/{vendor}" # 2. Keep this aligned under 'spring'

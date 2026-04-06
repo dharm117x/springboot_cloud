@@ -9,6 +9,7 @@
 		{
 			"Effect": "Allow",
 			"Action": [
+				"sqs:CreateQueue",
 				"sqs:SendMessage",
 				"sqs:ReceiveMessage",
 				"sqs:DeleteMessage"
