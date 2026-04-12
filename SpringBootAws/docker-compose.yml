@@ -3,7 +3,6 @@ services:
     image: springboot-app:latest
     container_name: my-boot-app
     privileged: true  # Simplest way for EC2 to see newly attached USB/IP devices
-    network_mode: "host"
     volumes:
       - "/dev:/dev"   # Maps the entire /dev to handle dynamic USB/IP attaches
       - "/home/ec2-user/app-logs:/app/logs"

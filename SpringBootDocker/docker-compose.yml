@@ -1,6 +1,6 @@
 services:
   my-app:
-    image: dharm117docker/springboot:1.1
+    image: dharm117docker/springboot-docker:1.1
     container_name: my-boo-app
     privileged: true  # Simplest way for EC2 to see newly attached USB/IP devices
     volumes:

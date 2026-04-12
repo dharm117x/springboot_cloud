@@ -3,7 +3,10 @@
 	"Statement": [
 		{
 			"Effect": "Allow",
-			"Action": "sns:ListTopics",
+			"Action": [
+			    "sns:ListTopics",
+			    "sns:GetTopicAttributes"
+			  ],
 			"Resource": "*"
 		},
 		{
