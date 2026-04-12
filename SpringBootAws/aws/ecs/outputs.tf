@@ -22,3 +22,8 @@ output "task_role_arn" {
   description = "The ARN of the IAM Task Role used by the Java application"
   value       = aws_iam_role.ecs_task_role.arn
 }
+
+output "alb_url" {
+  description = "Application Load Balancer URL"
+  value       = "http://${aws_lb.main.dns_name}"
+}
