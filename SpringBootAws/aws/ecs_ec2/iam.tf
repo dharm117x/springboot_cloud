@@ -19,8 +19,8 @@ resource "aws_iam_role_policy_attachment" "ecs_ec2_attach" {
 }
 
 # Create the Instance Profile that gets attached to the EC2 Launch Template/Configuration
-resource "aws_iam_instance_profile" "ecs_instance_profile" {
-  name = "ecs-ec2-app-profile"
+resource "aws_iam_instance_profile" "ecs_ec2_profile" {
+  name = "ecs-ec2-profile"
   role = aws_iam_role.ecs_ec2_role.name
 }
 

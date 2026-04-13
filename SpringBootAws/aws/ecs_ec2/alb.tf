@@ -1,19 +1,19 @@
 # The physical Load Balancer
 resource "aws_lb" "app-lb" {
-  name               = "springboot-alb"
+  name               = "ecs-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [data.aws_security_group.alb_sg.id]
   subnets            = data.aws_subnets.public_subnets.ids
 
   tags = {
-    Name = "springboot-alb"
+    Name = "ecs-alb"
   }
 }
 
 # The Target Group (Updated to match your 9001 port)
 resource "aws_lb_target_group" "app_tg" {
-  name        = "springboot-tg"
+  name        = "ecs-app-tg"
   port        = 9001
   protocol    = "HTTP"
   vpc_id      = data.aws_vpc.existing_vpc.id
