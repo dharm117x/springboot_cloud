@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
 
   container_definitions = templatefile("${path.module}/policies/container-def.json", {
     log_group_name     = aws_cloudwatch_log_group.ecs_logs.name
-    ecr_repository_url = var.ecr_repository_url
+    image_url          = var.docker_repository_url
     region             = var.region
     s3_bucket          = var.s3_bucket_name
     sqs_queue          = var.sqs_queue_name

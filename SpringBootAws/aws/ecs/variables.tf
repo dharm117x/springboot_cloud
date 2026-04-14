@@ -10,6 +10,8 @@ variable "ecs_cluster_name" {
 
 variable "ecr_repository_url" {}
 
+variable "docker_repository_url" {}
+
 variable "s3_bucket_name" {
   default = "my-app-bucket"
 }

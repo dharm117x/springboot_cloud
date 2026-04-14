@@ -20,7 +20,7 @@ data "aws_subnets" "private" {
 
 # 3. Look up the existing RDS Security Group
 data "aws_security_group" "existing_rds_sg" {
-	name = "rds-multi-security-group"
+	name = "rds-multi-port-sg"
 }
 
 # 4. Lookup up the DB Subnet Group (Required for RDS in a VPC)

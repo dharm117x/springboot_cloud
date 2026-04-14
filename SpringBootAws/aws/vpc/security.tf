@@ -47,8 +47,8 @@ locals {
   db_ports = [3306, 1521, 5432]
 }
 
-resource "aws_security_group" "rds_multi_sg" {
-  name        = "rds-multi-security-group"
+resource "aws_security_group" "rds_multi_port_sg" {
+  name        = "rds-multi-port-sg"
   description = "Allow inbound traffic for multiple database engines"
   vpc_id      = aws_vpc.main.id
 
