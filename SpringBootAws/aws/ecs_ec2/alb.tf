@@ -1,4 +1,4 @@
-# The physical Load Balancer
+# The physical Load Balancer-(Application Load Balancer)
 resource "aws_lb" "app-lb" {
   name               = "ecs-alb"
   internal           = false

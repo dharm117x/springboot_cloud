@@ -20,7 +20,7 @@ resource "aws_security_group_rule" "ssh" {
   cidr_blocks       = ["${chomp(data.http.my_ip.response_body)}/32"]
 }
 
-# Rule: Web Traffic (80, 443, 8080, 8090,s 9001)
+# Rule: Web Traffic (80, 443, 8080, 8090, 9001)
 resource "aws_security_group_rule" "web_traffic" {
   for_each          = toset(["80", "443", "8080","8090", "9001"])
   type              = "ingress"
@@ -47,7 +47,7 @@ locals {
   db_ports = [3306, 1521, 5432]
 }
 
-resource "aws_security_group" "rds_sg" {
+resource "aws_security_group" "rds_multi_sg" {
   name        = "rds-multi-security-group"
   description = "Allow inbound traffic for multiple database engines"
   vpc_id      = aws_vpc.main.id

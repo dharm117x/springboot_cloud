@@ -3,8 +3,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.example</groupId>
-	<artifactId>SpringBootCloud</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>springboot-cloud</artifactId>
+	<version>1.0</version>
+	<name>SpringBootCloud</name>
+	<description>Demo project for Spring Boot with Cloud</description>
 
 	<properties>
 		<java.version>17</java.version>
@@ -62,7 +64,13 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -73,23 +81,53 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
+		<finalName>springboot-cloud</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${boot.version}</version>
+				<configuration>
+					<image>
+						<name>
+							docker.io/dharm117docker/springboot-docker:${project.version}</name>
+						<publish>true</publish>
+					</image>
+					<docker>
+						<publishRegistry>
+							<username>${docker.user}</username>
+							<password>${docker.password}</password>
+						</publishRegistry>
+					</docker>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.5.1</version> <!-- latest stable -->
+				<configuration>
+					<to>
+						<image>
+							docker.io/dharm117docker/${project.artifactId}:${project.version}</image>
+						<auth>
+							<username>${docker.user}</username>
+							<password>${docker.password}</password>
+						</auth>
+					</to>
+					<container>
+						<ports>
+							<port>9001</port>
+						</ports>
+					</container>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

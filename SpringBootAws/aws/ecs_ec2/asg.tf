@@ -1,3 +1,4 @@
+# Auto Scaling Group for ECS EC2 instances
 # Get the latest ECS-optimized AMI for Amazon Linux 2
 data "aws_ami" "ecs_optimized" {
   most_recent = true

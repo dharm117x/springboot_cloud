@@ -1,10 +1,9 @@
-### 1. Public Subnet NACL (For ALB & ECS Tasks)
+### 1. Public Subnet NACL: Network Access Control List-stateless (ALB & ECS Tasks)
 resource "aws_network_acl" "public_nacl" {
-  vpc_id = aws_vpc.main.id
-  # UPDATED: Includes both public subnets
+  vpc_id     = aws_vpc.main.id
   subnet_ids = [aws_subnet.public_1.id, aws_subnet.public_2.id]
 
-  # Inbound: Allow HTTP (80) for ALB
+  # HTTP/HTTPS for ALB
   ingress {
     protocol   = "tcp"
     rule_no    = 100
@@ -14,28 +13,36 @@ resource "aws_network_acl" "public_nacl" {
     to_port    = 80
   }
 
-  # Inbound: Allow Spring Boot (8090) for ALB-to-Task or direct access
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 105
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 443
+    to_port    = 443
+  }
+
+  # Spring Boot Port
   ingress {
     protocol   = "tcp"
     rule_no    = 110
     action     = "allow"
     cidr_block = "0.0.0.0/0"
-    from_port  = 8090
-    to_port    = 8090
+    from_port  = 9001
+    to_port    = 9001
   }
 
-# Inbound: Allow SSH (22) for Admin Access (Optional, but useful for debugging)
- ingress {
+  # SSH (RECOMMENDED: Change 0.0.0.0/0 to your specific Admin IP)
+  ingress {
     protocol   = "tcp"
-    rule_no    = 115           # New rule number
+    rule_no    = 115
     action     = "allow"
-    cidr_block = "0.0.0.0/0"   # Or your specific IP for better security
+    cidr_block = "0.0.0.0/0" 
     from_port  = 22
     to_port    = 22
   }
 
-  # Inbound: Allow Return Traffic (Ephemeral Ports)
-  # Essential for ALB health checks and container updates
+  # Inbound Ephemeral (TCP) - Required for return traffic from Internet/NAT/DB
   ingress {
     protocol   = "tcp"
     rule_no    = 120
@@ -45,7 +52,16 @@ resource "aws_network_acl" "public_nacl" {
     to_port    = 65535
   }
 
-  # Outbound: Allow All (Needed for ALB to reach tasks and tasks to reach internet)
+  # Inbound Ephemeral (UDP) - Required for DNS resolution
+  ingress {
+    protocol   = "udp"
+    rule_no    = 130
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+    from_port  = 1024
+    to_port    = 65535
+  }
+
   egress {
     protocol   = "-1"
     rule_no    = 100
@@ -58,23 +74,32 @@ resource "aws_network_acl" "public_nacl" {
   tags = { Name = "public-nacl" }
 }
 
-### 2. Private Subnet NACL (For RDS)
+### 2. Private Subnet NACL (RDS)
 resource "aws_network_acl" "private_nacl" {
   vpc_id     = aws_vpc.main.id
   subnet_ids = [aws_subnet.private_1.id, aws_subnet.private_2.id]
 
-  # Inbound: Allow Database traffic from the ENTIRE Public Tier (10.0.1.0/24 & 10.0.4.0/24)
-  # Using the VPC CIDR or specific subnet CIDRs is best practice
+  # Allow DB traffic from VPC
   ingress {
     protocol   = "tcp"
     rule_no    = 100
     action     = "allow"
-    cidr_block = "10.0.0.0/16" # Allows any app task in the VPC to hit DB
+    cidr_block = "10.0.0.0/16"
     from_port  = 3306
     to_port    = 3306
   }
 
-  # Outbound: Allow Return Traffic to VPC
+  # Inbound Ephemeral - Critical so DB can receive response from VPC services
+  ingress {
+    protocol   = "tcp"
+    rule_no    = 110
+    action     = "allow"
+    cidr_block = "10.0.0.0/16"
+    from_port  = 1024
+    to_port    = 65535
+  }
+
+  # Outbound Ephemeral - Required to send data back to the App
   egress {
     protocol   = "tcp"
     rule_no    = 100
