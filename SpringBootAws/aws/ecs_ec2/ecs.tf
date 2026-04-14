@@ -93,8 +93,12 @@ resource "aws_ecs_service" "ecs_ec2_service" {
     container_name   = "springboot-container"
     container_port   = 9001
   }
+# THIS PREVENTS "UNKNOWN" DURING STARTUP
+  health_check_grace_period_seconds = 120 
 
-  depends_on = [ aws_lb_listener.http ]
+  # Ensure the service waits for the Capacity Provider to be ready
+  depends_on = [aws_lb_listener.http, aws_ecs_cluster_capacity_providers.cluster_capacity_providers]
+  
 }
 
 # CLOUDWATCH LOGS

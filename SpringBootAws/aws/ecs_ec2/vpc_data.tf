@@ -44,3 +44,16 @@ data "aws_security_group" "rds_existing_sg" {
   }
 }
 
+data "aws_route_table" "existing_public_rt" {
+  filter {
+    name   = "tag:Name"
+    values = ["public-route-table"] 
+  }
+}
+
+data "aws_route_table" "existing_private_rt" {
+  filter {
+    name   = "tag:Name"
+    values = ["private-route-table"] 
+  }
+}

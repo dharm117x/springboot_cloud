@@ -39,3 +39,10 @@ ECS: connect to container
 http://<TASK-PUBLIC-IP>:<PORT>/<YOUR-ENDPOINT>
 You see "0 EC2" under Container instances because you are using Fargate.
 
+ECS Redeploy:
+----------------
+aws ecs update-service \
+  --cluster <your_cluster_name> \
+  --service <your_service_name> \
+  --force-new-deployment
+

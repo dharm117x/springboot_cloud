@@ -1,6 +1,7 @@
 #1. Define the VPC with a CIDR block and enable DNS hostnames.
 resource "aws_vpc" "main" {
   cidr_block           = var.vpc_cidr
+  enable_dns_support   = true 
   enable_dns_hostnames = true
   tags                 = { Name = "main-vpc" }
 }
@@ -36,6 +37,7 @@ resource "aws_route_table" "public_rt" {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
   }
+  tags = { Name = "public-route-table" }
 }
 
 #6. Associate the public subnets with the route table to ensure they have internet connectivity.
@@ -66,8 +68,26 @@ resource "aws_subnet" "private_2" {
   tags              = { Name = "private-subnet-2" }
 }
 
+# 10. Create a route table for the private subnets
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.main.id
+  tags   = { Name = "private-route-table" }
+}
 
-#10. Create a DB subnet group that includes the private subnets for your database instances.
+# 11. Associate Private Subnet 1
+resource "aws_route_table_association" "private_1_assoc" {
+  subnet_id      = aws_subnet.private_1.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+# 12. Associate Private Subnet 2
+resource "aws_route_table_association" "private_2_assoc" {
+  subnet_id      = aws_subnet.private_2.id
+  route_table_id = aws_route_table.private_rt.id
+}
+
+
+# 13. Create a DB subnet group that includes the private subnets for your database instances.
 resource "aws_db_subnet_group" "app_db_subnet_group" {
   name       = "my-app-db-subnet-group"
   subnet_ids = [aws_subnet.private_1.id, aws_subnet.private_2.id]

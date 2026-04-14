@@ -7,6 +7,9 @@
     "essential": true,
     "environment": [
       { "name": "SERVER_PORT", "value": "9001"},
+      { "name": "SPRING_FLYWAY_BASELINE_ON_MIGRATE", "value": "true"},
+      { "name": "SPRING_CLOUD_AWS_SQS_LISTENER_AUTO_CREATE", "value": "false"},
+      { "name": "SPRING_CLOUD_AWS_SQS_QUEUE_RESOLUTION_STRATEGY", "value": "ACKNOWLEDGEMENT" },
       { "name": "SPRING_PROFILES_ACTIVE", "value": "dev" },
       { "name": "AWS_S3_BUCKET", "value": "${s3_bucket}" },
       { "name": "AWS_SQS_QUEUE", "value": "${sqs_queue}" },
@@ -23,7 +26,7 @@
     "mountPoints": [
     {
       "sourceVolume": "host_logs",
-      "containerPath": "/tmp" 
+      "containerPath": "/app/logs" 
     }
     ],
       "logConfiguration": {
