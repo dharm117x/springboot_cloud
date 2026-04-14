@@ -1,9 +1,9 @@
-# The physical Load Balancer-(Application Load Balancer)
+# The physical Load Balancer
 resource "aws_lb" "app-lb" {
   name               = "ecs-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [data.aws_security_group.alb_sg.id]
+  security_groups    = [aws_security_group.ecs_alb_sg.id]
   subnets            = data.aws_subnets.public_subnets.ids
 
   tags = {

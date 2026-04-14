@@ -30,23 +30,17 @@ data "aws_subnets" "private_subnets" {
 }
 
 # Find the Security Group
-data "aws_security_group" "alb_sg" {
+data "aws_security_group" "app_existing_sg" {
   filter {
     name   = "tag:Name"
-    values = ["alb-sg"] 
+    values = ["app-security-group"] 
   }
 }
 
-data "aws_security_group" "ecs_sg" {
+data "aws_security_group" "rds_existing_sg" {
   filter {
     name   = "tag:Name"
-    values = ["ecs-sg"] 
+    values = ["rds-multi-port-sg"] 
   }
 }
 
-data "aws_security_group" "ecs_app_sg" {
-  filter {
-    name   = "tag:Name"
-    values = ["ecs-app-sg"] 
-  }
-}
