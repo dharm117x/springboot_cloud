@@ -24,7 +24,7 @@ services:
     ports:
       - "9001:9001"
     environment:
-      - SNS_TOPIC_ARN=arn:aws:sns:us-east-1:636851749624:my-topic
+      - SNS_TOPIC_ARN=arn:aws:sns:us-east-1:ACC_NO:my-topic
       - SPRING_CLOUD_AWS_REGION_STATIC=us-east-1
       - SPRING_PROFILES_ACTIVE=dev
       - LOGGING_FILE_NAME=/app/logs/app.log
