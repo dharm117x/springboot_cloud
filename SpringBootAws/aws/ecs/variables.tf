@@ -13,16 +13,14 @@ variable "ecr_repository_url" {}
 variable "docker_repository_url" {}
 
 variable "s3_bucket_name" {
-  default = "my-app-bucket"
-}
-
-variable "sqs_queue_name" {
-  default = "my-order-queue"
+  default = "s3-java-pgm-mybucket"
 }
 
 variable "sns_topic_name" {
   default = "my-topic"
 }
+
+variable "sns_topic_arn" {}
 
 variable "rds_resource_id" {
   default = "mysql-single-az-db"

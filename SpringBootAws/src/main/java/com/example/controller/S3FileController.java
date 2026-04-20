@@ -2,6 +2,8 @@ package com.example.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,8 @@ import com.example.service.S3Service;
 @Controller
 @RequestMapping("/s3")
 public class S3FileController {
-
+	private static final Logger LOG = LoggerFactory.getLogger(S3FileController.class);
+    
     @Autowired
     private S3Service s3Service;
 
@@ -29,6 +32,7 @@ public class S3FileController {
         try {
             return s3Service.getBuckets();
         } catch (Exception e) {
+        	LOG.error("Error fetching S3 buckets: {}", e.getMessage());
             return List.of();
         }
     }
@@ -45,6 +49,7 @@ public class S3FileController {
             model.addAttribute("files", s3Service.getFiles(bucketName));
         } catch (Exception e) {
             ra.addFlashAttribute("message", "Error fetching files: " + e.getMessage());
+            LOG.error("Error fetching files from bucket '{}': {}", bucketName, e.getMessage());
             return "redirect:/s3";
         }
         return "s3bucket";
@@ -58,6 +63,7 @@ public class S3FileController {
             s3Service.uploadFile(bucketName, file);
             ra.addFlashAttribute("message", "Uploaded to " + bucketName + " successfully!");
         } catch (Exception e) {
+        	LOG.error("Error uploading file '{}' to bucket '{}': {}", file.getOriginalFilename(), bucketName, e.getMessage());
             ra.addFlashAttribute("message", "Upload Failed: " + e.getMessage());
         }
         // Redirecting to /files so the user stays in the current bucket view
@@ -73,6 +79,7 @@ public class S3FileController {
                     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                     .body(data);
         } catch (Exception e) {
+        	LOG.error("Error downloading file '{}' from bucket '{}': {}", fileName, bucketName, e.getMessage());
             return ResponseEntity.status(404).build();
         }
     }
@@ -85,6 +92,7 @@ public class S3FileController {
             s3Service.deleteFile(bucketName, fileName);
             ra.addFlashAttribute("message", "File '" + fileName + "' deleted successfully!");
         } catch (Exception e) {
+        	LOG.error("Error deleting file '{}' from bucket '{}': {}", fileName, bucketName, e.getMessage());
             ra.addFlashAttribute("message", "Delete Failed: " + e.getMessage());
         }
         return "redirect:/s3/files?bucketName=" + bucketName;

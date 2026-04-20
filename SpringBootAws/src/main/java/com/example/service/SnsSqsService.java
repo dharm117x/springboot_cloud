@@ -28,7 +28,7 @@ import software.amazon.awssdk.services.sns.model.PublishResponse;
 public class SnsSqsService {
     private static final Logger LOG = LoggerFactory.getLogger(SnsSqsService.class);
     
-	@Value("${sns.topic-arn:test-topic-arn}")
+	@Value("${sns.topic.arn:test-topic-arn}")
     private String topicArn;
 
 	@Autowired
@@ -56,7 +56,7 @@ public class SnsSqsService {
 		LOG.info("Preparing to send message to SNS: {}", messageModel);
 		if ("USER".equals(messageModel.getDataType())) {
 			String jsonToSend = getMessage(messageModel, UserTo.class);
-			sendSnsMessageByTemplaate2(jsonToSend, "UserType");
+			sendSnsMessageByClinet(jsonToSend, "UserType");
 		} else {
 			String jsonToSend = getMessage(messageModel, OrderTo.class);
 			sendSnsMessageByClinet(jsonToSend, "OrderType");
@@ -93,8 +93,16 @@ public class SnsSqsService {
 	}
 	
 	private <T> String getMessage(MessageModel messageModel, Class<T> type) throws JsonProcessingException {
-		T payload = objectMapper.readValue(messageModel.getContent(), type);
-	    return objectMapper.writeValueAsString(payload);
+		String content = messageModel.getContent();
+		LOG.info("Original content: {}", content);
+		// If the content is valid JSON but wrapped in quotes (e.g., "{\"id\":\"1\"}"),
+		// Jackson might need to unwrap it first.
+		if (content != null && content.startsWith("\"")) {
+			content = objectMapper.readValue(content, String.class);
+		}
+
+		T payload = objectMapper.readValue(content, type);
+		return objectMapper.writeValueAsString(payload);
 	}
 
 }

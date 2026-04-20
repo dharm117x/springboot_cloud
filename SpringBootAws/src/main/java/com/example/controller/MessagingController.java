@@ -1,5 +1,7 @@
 package com.example.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,7 +17,8 @@ import com.example.service.SnsSqsService;
 @Controller
 @RequestMapping("/message")
 public class MessagingController {
-	
+	private static final Logger LOG = LoggerFactory.getLogger(MessagingController.class);
+
 	@Autowired
 	private SnsSqsService snsSqsService;
 	
@@ -45,6 +48,7 @@ public class MessagingController {
 			
 			ra.addFlashAttribute("status", "Message sent successfully!");
 		} catch (Exception e) {
+			LOG.error("Error sending message: {}", e.getMessage());
 			ra.addFlashAttribute("status", "Message sent Failed!");
 		}
 

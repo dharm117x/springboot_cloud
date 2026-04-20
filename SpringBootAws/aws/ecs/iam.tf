@@ -38,7 +38,6 @@ resource "aws_iam_policy" "app_permissions" {
     region         = var.region
     account_no     = var.account_no
     s3_bucket_name = var.s3_bucket_name
-    sqs_queue_name = var.sqs_queue_name
     sns_topic_name = var.sns_topic_name
     rds_resource_id = var.rds_resource_id
   })

@@ -59,9 +59,7 @@ resource "aws_ecs_task_definition" "ecs_task" {
     log_group_name     = aws_cloudwatch_log_group.ecs_logs.name
     image_url          = var.docker_repository_url
     region             = var.region
-    s3_bucket          = var.s3_bucket_name
-    sqs_queue          = var.sqs_queue_name
-    sns_topic          = var.sns_topic_name
+    sns_topic_arn      = var.sns_topic_arn
     rds_endpoint       = var.rds_endpoint
     db_name            = var.db_name
     db_user            = var.db_user

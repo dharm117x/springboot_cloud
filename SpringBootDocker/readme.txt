@@ -84,3 +84,40 @@ docker run -d \
   -e SPRING_DATASOURCE_PASSWORD=***** \
   dharm117docker/springboot:1.1
 
+Docker Commands:
+-----------------
+docker build -t my-ecr-repo:latest . : Build a Docker image from the current directory (where the Dockerfile is located) and tag it as "my-ecr-repo:latest".
+
+docker tag my-ecr-repo:latest <ACC_NO>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest : Tag the local image with the ECR repository URI so it can be pushed to ECR.
+docker push <ACC_NO>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest : Push the tagged image to your ECR repository in AWS.
+docker pull <ACC_NO>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest : Pull the image from ECR to your local machine.
+docker rmi <ACC_NO>.dkr.ecr.us-east-1.amazonaws.com/my-ecr-repo:latest  : Remove the local copy of the image after pushing to ECR to free up space.
+
+docker images: List all local Docker images.
+docker ps: List all running Docker containers.
+docker ps -a: List all Docker containers (including stopped ones).
+docker stop container_id: Stop a running container.
+docker rm container_id: Remove a stopped container.
+docker rmi image_id: Remove a Docker image from local storage.
+docker logs container_id: View logs from a running container.
+docker exec -it container_id bash: Access the shell of a running container for debugging or management.
+docker run --env VAR_NAME=value -v host_dir:container_dir -d -p host_port:container_port --name container_name image_name:tag: 
+---Run a new container with multiple options, including setting environment variables, mounting volumes, running in detached mode, mapping ports, and assigning a name to the container.
+
+docker run --network network_name image_name:tag: Run a new container and connect it to a specific Docker network for inter-container communication.
+docker run --name container_name --restart unless-stopped image_name:tag: Run a new container with a specific name and set it to automatically restart unless it is explicitly stopped, ensuring high availability for critical services.
+docker run --name container_name --cpus="1.5" image_name:tag: Run a new container with a specific name and limit its CPU usage to 1.5 cores to manage resource allocation on the host machine.
+docker run --name container_name --memory="512m" image_name:tag: Run a new container with a specific name and limit its memory usage to 512 megabytes to prevent it from consuming too much memory on the host machine.
+
+
+Docekr-Compose Commands:
+-------------------------
+docker-compose up: Start all services defined in a docker-compose.yml file.
+docker-compose down: Stop and remove all services defined in a docker-compose.yml file.
+docker-compose logs: View logs from all services defined in a docker-compose.yml file.
+docker-compose build: Build or rebuild services defined in a docker-compose.yml file.
+docker-compose ps: List the status of all services defined in a docker-compose.yml file.
+docker-compose exec service_name bash: Access the shell of a running service defined in a docker-compose.yml file.
+
+
+

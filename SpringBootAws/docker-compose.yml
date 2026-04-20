@@ -1,20 +1,39 @@
 services:
-  my-app:
-    image: springboot-app:latest
-    container_name: my-boot-app
-    privileged: true  # Simplest way for EC2 to see newly attached USB/IP devices
+  my-database:
+    image: mysql:latest
+    container_name: mysql-service # Fixed: Added space after colon
+    environment: # Added: MySQL requires an environment variable to initialize
+      - MYSQL_ROOT_PASSWORD=admin
+      - MYSQL_DATABASE=aws_db
+    ports:
+      - "3306:3306"
     volumes:
-      - "/dev:/dev"   # Maps the entire /dev to handle dynamic USB/IP attaches
-      - "/home/ec2-user/app-logs:/app/logs"
+      - mysql_data:/var/lib/mysql # This persists your data
+    healthcheck: # Added: Prevents app from starting before DB is ready
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  my-app:
+    image: dharm117docker/springboot-aws:1.2
+    container_name: my-boot-app
+    privileged: true
+    volumes:
+      - "/home/dharmendra/apps:/app/logs"
     ports:
       - "9001:9001"
     environment:
-      - SNS_TOPIC_ARN=arn:aws:sns:us-east-1:ACC_NO:my-topic
+      - SNS_TOPIC_ARN=arn:aws:sns:us-east-1:636851749624:my-topic
       - SPRING_CLOUD_AWS_REGION_STATIC=us-east-1
-      - SPRING_PROFILES_ACTIVE=test
-      - SPRING_CLOUD_AWS_CREDENTIALS_INSTANCE_PROFILE=true
+      - SPRING_PROFILES_ACTIVE=dev
       - LOGGING_FILE_NAME=/app/logs/app.log
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-single-az-db.ce3i02g225kv.us-east-1.rds.amazonaws.com:3306/app_db
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=*****
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/aws_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=admin
+    depends_on:
+      my-database:
+        condition: service_healthy # Fixed: Ensures app waits for DB readiness
     restart: unless-stopped
+volumes:
+  mysql_data: # Defines the named volume

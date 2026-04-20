@@ -1,8 +1,4 @@
 variable "account_no" {}
-variable "ami_id" {}
-variable "instance_type" {
-  default = "t3.micro"
-}
 
 variable "region" {
   default = "us-east-1"
@@ -15,17 +11,21 @@ variable "ecs_cluster_name" {
 variable "docker_repository_url" {}
 variable "ecr_repository_url" {}
 
-variable "s3_bucket_name" {
-  default = "my-app-bucket"
+variable "s3_bucket_name" {}
+
+variable "sqs_user_name" {
+  default = "my-user-queue"
 }
 
-variable "sqs_queue_name" {
+variable "sqs_order_name" {
   default = "my-order-queue"
 }
 
 variable "sns_topic_name" {
   default = "my-topic"
 }
+
+variable "sns_topic_arn" {}
 
 variable "rds_resource_id" {
   default = "mysql-single-az-db"

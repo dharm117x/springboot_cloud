@@ -23,20 +23,19 @@
       "Resource": "*"
     },
     {
-      "Sid": "SQSQueueAccess",
-      "Effect": "Allow",
-      "Action": [
-        "sqs:CreateQueue",
-        "sqs:TagQueue",
-        "sqs:SendMessage",
-        "sqs:ReceiveMessage",
-        "sqs:DeleteMessage",
-        "sqs:GetQueueAttributes",
-        "sqs:GetQueueUrl"
-        
-      ],
-      "Resource": "arn:aws:sqs:${region}:${account_no}:${sqs_queue_name}"
-    },
+		"Sid": "SQSQueueAccess",
+		"Effect": "Allow",
+		"Action": [
+			"sqs:CreateQueue",
+			"sqs:GetQueueUrl",
+			"sqs:GetQueueAttributes",
+			"sqs:SendMessage",
+			"sqs:ReceiveMessage",
+			"sqs:DeleteMessage"
+		],
+		"Resource": ["arn:aws:sqs:${region}:${account_no}:${sqs_user_name}",
+	                 "arn:aws:sqs:${region}:${account_no}:${sqs_order_name}"]
+	},
     {
       "Sid": "SNSGlobalAccess",
       "Effect": "Allow",
