@@ -1,9 +1,10 @@
 # 1. The Bucket
 resource "aws_s3_bucket" "my_bucket" {
-  bucket = "${var.env}-${var.bucket_name}"
+  bucket = "${var.my-env}-${var.bucket_name}"
+
   tags = {
-    Name        = "${var.env}-${var.bucket_name}"
-    Environment = var.env
+    Name        = "${var.my-env}-${var.bucket_name}"
+    Environment = var.my-env
   }
 }
 
